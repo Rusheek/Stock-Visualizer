@@ -13,7 +13,7 @@ import yfinance as yf
 
 
 st.title("Stock Visualizer!!")
-#st.write("dedicated to my dearest friend Turki Naik")
+
 st.sidebar.title('Investor Dashboard')
 
 @st.cache(persist=True)
