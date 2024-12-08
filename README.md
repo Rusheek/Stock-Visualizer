@@ -1,1 +1,1 @@
-# Stonk-Visualizer
+# Stock-Visualizer
