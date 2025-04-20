@@ -16,24 +16,25 @@ st.title("Stock Visualizer!!")
 
 st.sidebar.title('Investor Dashboard')
 
-@st.cache(persist=True)
+# @st.cache(persist=True)s
 def load_all_tickers():
     url = 'https://en.wikipedia.org/wiki/NIFTY_50'
     df1 = pd.read_html(url)
     df=df1[1]
     return df
 df = load_all_tickers()
-
+print(df)
 
 #grouping sector wise
-df2=df.groupby('Sector')
+df2=df.groupby('Sector[15]')
+print(df2)
 
 
 
 
 #list of tickers grouped
 #Automobile
-Automobile1 = df2.get_group('Automobile')['Symbol']
+Automobile1 = df2.get_group('Automobile and Auto Components')['Symbol']
 Automobile = [0]*0
 for i in range(0,6):
    Automobile.append(Automobile1.iloc[i])
@@ -96,7 +97,6 @@ for i in range(0,4):
 #Line_chart
  def Line_chart(df):
      st.line_chart(data=df)
-
 #datetime
 start = dt.date(2019,5,1)
 end = dt.datetime.now()
@@ -368,7 +368,7 @@ dct={"Automobile":Automobile,"Banking":Banking,"Cement":Cement,"Consumer Goods":
 sectors=["None","Automobile","Banking","Cement","Consumer Goods","Energy - Oil & Gas","Financial Services","Information Technology","Metals","Pharmaceuticals"]
 sector = st.sidebar.selectbox("Select your sector",sectors)
 
-if sector is not "None":
+if sector != "None":
     st.markdown(sector)
     st.sidebar.markdown("#### Select your type of Analysis")
     tech=st.sidebar.checkbox("Technicals",False,key="3")

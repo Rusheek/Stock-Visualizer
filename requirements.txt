@@ -1,0 +1,8 @@
+pip install streamlit
+pip install setuptools
+pip install pandas
+pip install numpy
+pip install matplotlib
+pip install pandas-datareader
+pip install plotly
+pip install yfinance
