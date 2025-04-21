@@ -3,6 +3,7 @@ from utils import global_data as gd
 import pandas_datareader.data as reader
 from datetime import datetime, timedelta
 import yfinance as yf
+import streamlit as st
 
 # yf.enable_debug_mode()
 
@@ -14,24 +15,34 @@ def load_data():
     gd.main_df = df
     gd.sectors_list = df['Sector'].unique()
 
-def get_tickers_data(stocks_list,start_date,end_date):
+@st.cache_data
+def get_tickers_technical_data(stocks_list,start_date,end_date):
 
     # tickers_df = yf.download(stocks_list,start_date,end_date)
-
     # df = reader.get_data_yahoo(stocks_list,start_date,end_date)
     # return df
 
     return yf.Tickers(stocks_list).download(start=start_date,end=end_date)
 
-def test_functions(stock_list):
-    x = yf.Tickers(stock_list)
+@st.cache_data
+def get_tickers_fundamental_data(stocks_list,start_date,end_date):
 
-    print (x.tickers['RELIANCE'].info)
+    data = {}
+    t = yf.Ticker(stocks_list)
+    bs = t.get_balance_sheet(pretty=True,freq="quarterly")
+    
+    return bs
+
+def test_functions(tickers):
+
+    print (yf.Tickers(tickers).news)
 
 
-end = datetime.now()
-start = end - timedelta(days=365)
+# end = datetime.now()
+# start = end - timedelta(days=365)
 
-tickers = ['ADANIPORTS.NS','CIPLA.NS']
-df = (get_tickers_data(tickers,start,end))
-print(df[0])
+# tickers = 'ADANIPORTS.NS'
+# df = (get_tickers_fundamental_data(tickers,start,end))
+# print(df.iloc[:,0])
+
+# test_functions(tickers)
