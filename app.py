@@ -1,6 +1,11 @@
 import streamlit as st
-from logic import load_data as ld
+import logic
+import logic.load_data
+from utils import global_data as gd
 
-ld.load_data()
+logic.load_data.set_global_data()
+# print(gd.sectors)
+# print(gd.nifty_df)
+
 
 
