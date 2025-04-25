@@ -6,14 +6,14 @@ import yfinance as yf
 import streamlit as st
 
 # yf.enable_debug_mode()
-
-def load_data():
+# @st.cache_data
+def set_global_data():
     url = 'https://en.wikipedia.org/wiki/NIFTY_50'
     df = pd.read_html(url)[1]
     df.rename(columns={df.columns[0]:"Company Name",df.columns[1]:"Ticker",df.columns[2]:"Sector",df.columns[3]:"Date Added"}, inplace=True)
     df['Ticker'] = df['Ticker'] + '.NS'
-    gd.main_df = df
-    gd.sectors_list = df['Sector'].unique()
+    gd.nifty_df = df
+    gd.sectors = df['Sector'].unique()
 
 @st.cache_data
 def get_tickers_technical_data(stocks_list,start_date,end_date):
@@ -46,3 +46,4 @@ def test_functions(tickers):
 # print(df.iloc[:,0])
 
 # test_functions(tickers)
+
