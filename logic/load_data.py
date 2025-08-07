@@ -4,10 +4,12 @@ import pandas_datareader.data as reader
 from datetime import datetime, timedelta
 import yfinance as yf
 import streamlit as st
+import asyncio
+
 
 # yf.enable_debug_mode()
 # @st.cache_data
-def set_global_data():
+async def set_global_data():
     url = 'https://en.wikipedia.org/wiki/NIFTY_50'
     df = pd.read_html(url)[1]
     df.rename(columns={df.columns[0]:"Company Name",df.columns[1]:"Ticker",df.columns[2]:"Sector",df.columns[3]:"Date Added"}, inplace=True)
