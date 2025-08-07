@@ -13,14 +13,62 @@ import yfinance as yf
 
 
 def Line_chart(df):
+
+    # st.write(df.set_index("Date")["Close"])
+    df.reset_index(inplace=True)
+
     st.line_chart(df.set_index("Date")["Close"])
 
-start = dt.date(2019,5,1)
+def interactive_candelsticks(df):
+                  
+    df.set_index('Date', inplace=True)
+    # st.write(df)
+    # st.write(df.columns)
+    df.columns = df.columns.droplevel(1)
+
+    # st.write(df.columns)
+    df = df.reset_index()
+
+    # st.write(df)
+
+    fig = go.Figure(data =[go.Candlestick(x=df['Date'],
+                                     open=df['Open'],
+                                     high = df['High'],
+                                     low = df['Low'],
+                                     close = df['Close'])])
+
+    # st.plotly_chart(fig)
+
+    # Layout customization
+    fig.update_layout(
+        title="Nifty 50 Index (Candlestick)",
+        xaxis_title="Date",
+        yaxis_title="Price (INR)",
+        xaxis_rangeslider_visible=False,
+        template="plotly_dark",
+        height=600
+    )
+
+    # Display in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
+
+start = dt.date(2024,5,1)
 end = dt.datetime.now()
 
-data = yf.download("^NSEI", start=start, end=end)
-# titles = ['Open','High','Low','Close', 'Volume' ]
-# ndf = ndf[titles]
-# ndf1 = ndf['Close']
-data.reset_index(inplace=True)
-st.line_chart(data.set_index("Date")["Close"])
+sample_data = pd.DataFrame({
+    'Date': pd.to_datetime([
+        '2023-01-01', '2023-01-02', '2023-01-03', '2023-01-04', '2023-01-05'
+    ]),
+    'Open':  [100, 102, 101, 105, 107],
+    'High':  [105, 106, 104, 108, 110],
+    'Low':   [99, 100, 98, 103, 105],
+    'Close': [103, 101, 102, 107, 109]
+})
+
+sample_data.set_index('Date', inplace=True)
+
+Data = yf.download("^NSEI", start=start, end=end,interval="1d")
+
+Line_chart(Data)
+
+interactive_candelsticks(Data)
