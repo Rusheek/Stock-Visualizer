@@ -4,7 +4,9 @@ import pandas_datareader.data as reader
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import mplfinance as mpf
+import yfinance as yf
 
+#Peer_Line
 def relativeret(df):
     daily_returns = df.pct_change()
     daily_cum_returns = (daily_returns +1).cumprod()
@@ -14,43 +16,76 @@ def relativeret(df):
 def peer_line(sts):
     dropdown = st.multiselect('Pick your assest',sts)
     if len(dropdown)>0:
-        df = relativeret(reader.get_data_yahoo(dropdown,start,end)['Adj Close'])
-        #st.write(df)
+        df = yf.download(dropdown, start, end, auto_adjust=False)
+        
+        df = relativeret(df['Adj Close'])
+        # st.write(df)
         i=0
         fig = go.Figure()
         st.write(dropdown)
         for x in dropdown:
-            fig.add_traces(go.Scatter(x=df.index,y=df[x],mode ='lines',name=x))
+            fig.add_trace(go.Scatter(x=df.index,y=df[x],mode ='lines',name=x))
 
         st.plotly_chart(fig)
 
 def Line_chart(df):
-     
-    st.line_chart(data=df)
 
-def interactive_candelsticks(df1):
-    fig = go.Figure(data =[go.Candlestick(x=df1.index,
-                                     open=df1['Open'],
-                                     high = df1['High'],
-                                     low = df1['Low'],
-                                     close = df1['Close'])])
+    # st.write(df.set_index("Date")["Close"])
+    df.reset_index(inplace=True)
 
-    st.plotly_chart(fig)
+    st.line_chart(df.set_index("Date")["Close"])
+
+def interactive_candelsticks(df):
+                  
+    df.set_index('Date', inplace=True)
+    # st.write(df)
+    # st.write(df.columns)
+    df.columns = df.columns.droplevel(1)
+
+    # st.write(df.columns)
+    df = df.reset_index()
+
+    # st.write(df)
+
+    fig = go.Figure(data =[go.Candlestick(x=df['Date'],
+                                     open=df['Open'],
+                                     high = df['High'],
+                                     low = df['Low'],
+                                     close = df['Close'])])
+    # st.plotly_chart(fig)
+    # Layout customization
+    fig.update_layout(
+        title="Nifty 50 Index (Candlestick)",
+        xaxis_title="Date",
+        yaxis_title="Price (INR)",
+        xaxis_rangeslider_visible=False,
+        template="plotly_dark",
+        height=600
+    )
+
+    # Display in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 
 
+#mpf_plots
 def mpf_plots(df):
-    #
-    fig=mpf.plot(df, type='candle', style='yahoo',
+    
+    fig, axes = mpf.plot(
+        df,
+        type='candle',
+        style='yahoo',
         title='Moving Averages',
         ylabel='Price',
-        ylabel_lower='',
+        ylabel_lower='Volume',
         volume=True,
-        mav=(50,200),tight_layout=True,figscale=0.75
-
-       )
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+        mav=(50, 200),
+        tight_layout=True,
+        figscale=0.75,
+        returnfig=True  
+    )
+    
+    
     st.pyplot(fig)
-    #st.plt.legend()
 
 #RSI
 def get_RSI(df, column='Adj Close', time_window=14):
