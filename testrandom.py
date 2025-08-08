@@ -52,6 +52,7 @@ def interactive_candelsticks(df):
     # Display in Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
+
 #mpf_plots
 def mpf_plots(df):
     
@@ -94,6 +95,7 @@ def peer_line(sts):
 
         st.plotly_chart(fig)
 
+
 start = dt.date(2024,5,1)
 end = dt.datetime.now()
 
@@ -108,6 +110,7 @@ sample_data = pd.DataFrame({
 })
 
 sample_data.set_index('Date', inplace=True)
+
 
 def plot_candlestick_chart(fig, df, row, column=1):
     """Return a graph object figure containing a Candlestick chart in the specified row."""
@@ -248,3 +251,9 @@ mpf_plots(Data)
 peer_line(sts)
 
 bar_plot(Data)
+
+Data = yf.download("^NSEI", start=start, end=end,interval="1d")
+
+Line_chart(Data)
+
+interactive_candelsticks(Data)
