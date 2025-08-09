@@ -9,5 +9,7 @@ st.write("You have selected:", option)
 if option is not None:
     index_ticker = gd.index_tickers[option]
     st.write("Ticker symbol for the index is :",index_ticker)
-    # TODO write logic to display charts
+    #TODO add the code for displaying charts (Integration)
+    # fetch the data of selected stock and display charts
+        
     
