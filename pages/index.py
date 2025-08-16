@@ -16,9 +16,9 @@ if option is not None:
     #TODO add the code for displaying charts (Integration)
     # fetch the data of selected stock and display charts
 
-    # Define date range (last 1 year)
-    end = datetime.now()
-    start = end - timedelta(days=365)
+    # Use global date range
+    start = gd.start
+    end = gd.end
 
     # Download data in two shapes:
     # - df_multi: MultiIndex columns (required by interactive_candelsticks)
